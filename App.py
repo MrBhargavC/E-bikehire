@@ -10,6 +10,31 @@ from xml.etree import ElementTree as etree
 app = Flask(__name__,  template_folder='templates', static_folder='static')
 
 
+@app.route('/', methods=['GET', 'POST'])
+def dashboard():
+    document = requests.get("https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml")
+    tree = etree.fromstring(document.content)
+    stationArr = []
+    for station in tree.findall('station'):
+        response = {}
+        response['id'] = station.find('id').text
+        response['name'] = station.find('name').text
+        response['terminalName'] = station.find('terminalName').text
+        response['lat'] = station.find('lat').text
+        response['long'] = station.find('long').text
+        response['installed'] = station.find('installed').text
+        response['removalDate'] = station.find('removalDate').text
+        response['locked'] = station.find('locked').text
+        response['installDate'] = station.find('installDate').text
+        response['temporary'] = station.find('temporary').text
+        response['nbBikes'] = station.find('nbBikes').text
+        response['nbStandardBikes'] = station.find('nbStandardBikes').text
+        response['nbEBikes'] = station.find('nbEBikes').text
+        response['nbEmptyDocks'] = station.find('nbEmptyDocks').text
+        response['nbDocks'] = station.find('nbDocks').text
+        stationArr.append(response)
+    return render_template("home.html",stations=stationArr)
+
 @app.route('/livecyclehireupdates', methods=['GET', 'POST'])
 def livecyclehireupdates():
     document = requests.get("https://tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml")

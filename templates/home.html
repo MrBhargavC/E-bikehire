@@ -1,9 +1,37 @@
 <!DOCTYPE html>
 <html>
+    <link rel="stylesheet" href="static/css/style.css">
 <body>
 
 <h1>London cycle hire dashboard</h1>
-<p>Welcome to London cycle hire dashboard</p>
-
+<h2>Welcome to London cycle hire dashboard</h2>
+<div>
+    <table>
+        <thead>
+          <tr>
+            <th> Terminal Name</th>
+            <th> Location</th>
+            <th>Bikes </th>
+            <th>Docks</th>
+            <th>Empty Docks</th>
+            <th>Standard Bikes</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for station in stations %}
+          <tr>
+            <td >{{station['terminalName']}}</td>
+            <td >{{station['name']}}</td>
+            <td >{{station['nbBikes']}}</td>
+            <td >{{station['nbDocks']}}</td>
+            <td >{{station['nbEmptyDocks']}}</td>
+            <td >{{station['nbStandardBikes']}}</td>
+           
+          </tr>
+          {% endfor %}
+          
+        </tbody>
+      </table>
+</div>
 </body>
 </html> 
