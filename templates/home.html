@@ -1,12 +1,59 @@
 <!DOCTYPE html>
 <html>
     <link rel="stylesheet" href="static/css/style.css">
+    <head>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    </head>
 <body>
-
-<h1>London Cycle Hire Dashboard</h1>
-<h2>Welcome To London Cycle Hire Dashboard</h2>
+  <script>
+    function myFunction(index, field) {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById(field);
+      filter = input.value.toUpperCase();
+      table = document.getElementById("datatable-cycle");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[index];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }       
+      }
+    }
+    </script>
+<h1>London cycle hire dashboard</h1>
+<h2>Welcome to London cycle hire dashboard</h2>
 <div>
-    <table>
+  <div>
+    <span>
+      <input type="text" id="terminalName" onkeyup="myFunction(0,'terminalName')" placeholder="Search for Terminal Name" title="Search In table">
+    </span>
+    <span>OR</span>
+    <span>
+      <input type="text" id="location" onkeyup="myFunction(1,'location')" placeholder="Search for Location" title="Search In table">
+    </span>
+    <span>OR</span>
+    <span>
+      <input type="text" id="bikes" onkeyup="myFunction(2,'bikes')" placeholder="Search for bikes" title="Search In table">
+    </span>
+    <span>OR</span>
+    <span>
+      <input type="text" id="docks" onkeyup="myFunction(3,'docks')" placeholder="Search for docks" title="Search In table">
+    </span>
+    <span>OR</span>
+    <span>
+      <input type="text" id="emptydocks" onkeyup="myFunction(4,'emptydocks')" placeholder="Search for empty docks" title="Search In table">
+    </span>
+    <span>OR</span>
+    <span>
+      <input type="text" id="standardbikes" onkeyup="myFunction(5,'standardbikes')" placeholder="Search for standard bikes" title="Search In table">
+    </span>
+  </div>
+    <table id="datatable-cycle">
         <thead>
           <tr>
             <th> Terminal Name</th>
