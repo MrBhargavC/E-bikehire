@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import jsonify, render_template
 from flask import Flask
 
 from datetime import datetime
@@ -58,7 +58,7 @@ def livecyclehireupdates():
         response['nbEmptyDocks'] = station.find('nbEmptyDocks').text
         response['nbDocks'] = station.find('nbDocks').text
         stationArr.append(response)
-    return stationArr
+    return jsonify(stationArr)
 
 
 

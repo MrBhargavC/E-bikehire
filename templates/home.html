@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="static/css/style.css">
-    <head>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    </head>
+<link rel="stylesheet" href="static/css/style.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+  integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+</head>
+
 <body>
   <script>
+
+
+
     function myFunction(index, field) {
       var input, filter, table, tr, td, i, txtValue;
       input = document.getElementById(field);
@@ -21,64 +30,150 @@
           } else {
             tr[i].style.display = "none";
           }
-        }       
+        }
       }
     }
-    </script>
-<h1>London cycle hire dashboard</h1>
-<h2>Welcome to London cycle hire dashboard</h2>
-<div>
-  <div>
-    <span>
-      <input type="text" id="terminalName" onkeyup="myFunction(0,'terminalName')" placeholder="Search for Terminal Name" title="Search In table">
-    </span>
-    <span>OR</span>
-    <span>
-      <input type="text" id="location" onkeyup="myFunction(1,'location')" placeholder="Search for Location" title="Search In table">
-    </span>
-    <span>OR</span>
-    <span>
-      <input type="text" id="bikes" onkeyup="myFunction(2,'bikes')" placeholder="Search for bikes" title="Search In table">
-    </span>
-    <span>OR</span>
-    <span>
-      <input type="text" id="docks" onkeyup="myFunction(3,'docks')" placeholder="Search for docks" title="Search In table">
-    </span>
-    <span>OR</span>
-    <span>
-      <input type="text" id="emptydocks" onkeyup="myFunction(4,'emptydocks')" placeholder="Search for empty docks" title="Search In table">
-    </span>
-    <span>OR</span>
-    <span>
-      <input type="text" id="standardbikes" onkeyup="myFunction(5,'standardbikes')" placeholder="Search for standard bikes" title="Search In table">
-    </span>
-  </div>
-    <table id="datatable-cycle">
-        <thead>
-          <tr>
-            <th> Terminal Name</th>
-            <th> Location</th>
-            <th>Bikes </th>
-            <th>Docks</th>
-            <th>Empty Docks</th>
-            <th>Standard Bikes</th>
-          </tr>
-        </thead>
-        <tbody>
-            {% for station in stations %}
-          <tr>
-            <td >{{station['terminalName']}}</td>
-            <td >{{station['name']}}</td>
-            <td >{{station['nbBikes']}}</td>
-            <td >{{station['nbDocks']}}</td>
-            <td >{{station['nbEmptyDocks']}}</td>
-            <td >{{station['nbStandardBikes']}}</td>
-           
-          </tr>
-          {% endfor %}
-          
-        </tbody>
-      </table>
+    
+  </script>
+  <div class="header-container">
+  <h1>London cycle hire dashboard</h1>
 </div>
+  <div class="search-container">
+    <div style="margin: 8px;">
+      <span>
+        <input type="text" id="terminalName" onkeyup="myFunction(0,'terminalName')"
+          placeholder="Search for Terminal Name" title="Search In table">
+      </span>
+      <span>OR</span>
+      <span>
+        <input type="text" id="location" onkeyup="myFunction(1,'location')" placeholder="Search for Location"
+          title="Search In table">
+      </span>
+      <span>OR</span>
+      <span>
+        <input type="text" id="bikes" onkeyup="myFunction(2,'bikes')" placeholder="Search for bikes"
+          title="Search In table">
+      </span>
+      <span>OR</span>
+      <span>
+        <input type="text" id="docks" onkeyup="myFunction(3,'docks')" placeholder="Search for docks"
+          title="Search In table">
+      </span>
+      <span>OR</span>
+      <span>
+        <input type="text" id="emptydocks" onkeyup="myFunction(4,'emptydocks')" placeholder="Search for empty docks"
+          title="Search In table">
+      </span>
+      <span>OR</span>
+      <span>
+        <input type="text" id="standardbikes" onkeyup="myFunction(5,'standardbikes')"
+          placeholder="Search for standard bikes" title="Search In table">
+      </span>
+    </div>
+   
+  </div>
+  <div class="container">
+    
+    <div id="map"></div>
+    <div class="container__form ">
+      <form action="#" class="form" id="form2">
+        <div>
+          <h3>Top 10 Stations with Most EBikes</h3>
+          <div id="stationtopten">
+
+          </div>
+        </div>
+        <h3>All Stations</h3>
+        <table id="datatable-cycle">
+          <thead>
+            <tr>
+              <th> Terminal Name</th>
+              <th> Location</th>
+              <th>Bikes </th>
+              <th>Docks</th>
+              <th>Empty Docks</th>
+              <th>Standard Bikes</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for station in stations %}
+            <tr>
+              <td>{{station['terminalName']}}</td>
+              <td>{{station['name']}}</td>
+              <td>{{station['nbBikes']}}</td>
+              <td>{{station['nbDocks']}}</td>
+              <td>{{station['nbEmptyDocks']}}</td>
+              <td>{{station['nbStandardBikes']}}</td>
+
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+      </form>
+    </div>
+
+  </div>
+  <div>
+  </div>
+  <script>
+
+async function  getData(){
+      const response = await fetch("http://localhost:5000/livecyclehireupdates");
+    var data = await response.json();
+    console.log(data)
+    var map = L.map('map', {
+      center: [37.0902, 95.7129],
+      zoom: 11
+    });
+    let sortedData = data.sort( function ( a, b ) { return b.nbBikes - a.nbBikes; } ); 
+    let topTen = "";
+    for(let i=0;i<10;i++){
+      topTen = topTen + "<p>"+(i+1)+"."+data[i]['terminalName']+" - "+data[i]["name"]+" : "+data[i]["nbBikes"]+"</p>"
+    }
+    document.getElementById("stationtopten").innerHTML = topTen
+    for (let i=0;i<data.length;i++) {
+          var marker = L.marker(
+            [data[i]["lat"], data[i]["long"]],
+            {
+              draggable: true,
+              title: "",
+              opacity: 0.75
+            });
+
+          marker.addTo(map).bindPopup("<p1><b>" + "<p> Terminal:"+
+              data[i]['terminalName']+"</p><p>Name:"+data[i]['name']+"</p><span>Bikes:"
+                +data[i]['nbBikes']+"</span><span>Docks:"+data[i]['nbDocks']+"</span><span> Empty Docks:"+
+                  data[i]['nbEmptyDocks']+"</span><span>Standard Bikes:"+data[i]['nbStandardBikes']+"</span>"
+
+             + "</p1>").openPopup();
+
+        }
+        var tiles = new L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'E-Cycle Tracker',
+      // minZoom: '15'
+    }).addTo(map);
+
+    }
+    getData();
+   
+
+   ///////////////////////////////////
+   
+   
+
+
+    /////////////////////////////////////
+
+   
+
+
+
+
+    
+
+
+  </script>
 </body>
-</html> 
+
+</html>
